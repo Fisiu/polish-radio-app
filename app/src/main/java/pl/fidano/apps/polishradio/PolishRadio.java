@@ -112,8 +112,13 @@ public class PolishRadio extends AppCompatActivity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getBaseContext(), "Refreshing done", Toast.LENGTH_SHORT).show();
                 mSwipeRefreshLayout.setRefreshing(false);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getBaseContext(), "Refreshing done", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }, 2000);
     }
