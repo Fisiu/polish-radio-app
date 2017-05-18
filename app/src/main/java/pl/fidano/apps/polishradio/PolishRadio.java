@@ -1,24 +1,31 @@
 package pl.fidano.apps.polishradio;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
-public class PolishRadio extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 
+import org.json.JSONArray;
+
+public class PolishRadio extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener, Response.Listener<JSONArray>, Response.ErrorListener {
+
+    private final String API_URL = "http://jsonplaceholder.typicode.com/photos";
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
@@ -109,17 +116,22 @@ public class PolishRadio extends AppCompatActivity
 
     @Override
     public void onRefresh() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mSwipeRefreshLayout.setRefreshing(false);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getBaseContext(), "Refreshing done", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        }, 2000);
+        VolleySingleton.getInstance(this).addToRequestQueue(new JsonArrayRequest(API_URL, this, this));
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        mSwipeRefreshLayout.setRefreshing(false);
+        Log.d("FETCH", error.getMessage());
+        Toast.makeText(getBaseContext(), "Fetching data failed", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onResponse(JSONArray response) {
+        mSwipeRefreshLayout.setRefreshing(false);
+        // response is a json array
+        int size = response.length();
+        Log.d("API RESPONSE", response.toString());
+        Toast.makeText(getBaseContext(), "Items in array: " + size, Toast.LENGTH_SHORT).show();
     }
 }
