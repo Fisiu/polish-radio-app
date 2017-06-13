@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="false"
+    android:layout_centerVertical="false"
+    android:orientation="horizontal"
+    android:padding="5dip">
+
+    <!--  ListRow Left side thumbnail image -->
+    <LinearLayout
+        android:id="@+id/thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="5dip"
+        android:background="@drawable/ic_action_radio"
+        android:padding="3dip">
+
+        <ImageView
+            android:id="@+id/list_image"
+            android:layout_width="50dip"
+            android:layout_height="50dip" />
+
+    </LinearLayout>
+
+    <!-- Radio name -->
+    <TextView
+        android:id="@+id/radioName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/thumbnail"
+        android:layout_marginBottom="4dip"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:text="Radio Name"
+        android:textColor="#040404"
+        android:textSize="18dip"
+        android:textStyle="bold"
+        android:typeface="sans" />
+
+    <!-- Artist Name -->
+    <TextView
+        android:id="@+id/radioUrl"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/radioName"
+        android:layout_marginTop="1dip"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:text="Some url..."
+        android:textColor="#343434"
+        android:textSize="12dip" />
+
+</RelativeLayout>
