@@ -1,6 +1,13 @@
 package pl.fidano.apps.polishradio;
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.PowerManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -14,6 +21,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -21,12 +30,23 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import pl.fidano.apps.polishradio.models.Radio;
 
 public class PolishRadio extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener, Response.Listener<JSONArray>, Response.ErrorListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener, Response.Listener<JSONArray>, Response.ErrorListener, AdapterView.OnItemClickListener {
 
-    private final String API_URL = "http://jsonplaceholder.typicode.com/photos";
+    private final String TAG = "PolishRadioActivity";
+
+    private final String API_URL = "http://testradio.fidano.pl/api/v1/radios";
+    private ListView list;
+    private RadiosAdapter adapter ;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private ArrayList<Radio> feed = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +55,19 @@ public class PolishRadio extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        list = (ListView) findViewById(android.R.id.list);
+        list.setOnItemClickListener(this);
+        feed.add(new Radio("Logo url", "Name", "Url", "Stream url"));
+        adapter = new RadiosAdapter(this, feed);
+        list.setAdapter(adapter);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_INDEFINITE)
                         .setAction("Action", null).show();
+                stopService(new Intent(getApplicationContext(), PlayerService.class));
             }
         });
 
@@ -55,6 +82,8 @@ public class PolishRadio extends AppCompatActivity
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
         mSwipeRefreshLayout.setOnRefreshListener(this);
+
+        VolleySingleton.getInstance(this).addToRequestQueue(new JsonArrayRequest(API_URL, this, this));
     }
 
     @Override
@@ -133,5 +162,41 @@ public class PolishRadio extends AppCompatActivity
         int size = response.length();
         Log.d("API RESPONSE", response.toString());
         Toast.makeText(getBaseContext(), "Items in array: " + size, Toast.LENGTH_SHORT).show();
+
+        feed.clear();
+        for (int i = 0; i < size; i++) {
+            try {
+                JSONObject obj = response.getJSONObject(i);
+                feed.add(new Radio(obj.getString("logo_url"), obj.getString("name"), obj.getString("url"), obj.getString("stream_url")));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    String toast = "";
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        final Radio radio = (Radio) parent.getItemAtPosition(position);
+        final String url = radio.getStreamUrl();
+
+        startService(new Intent(this, PlayerService.class).setAction("pl.fidano.apps.polishradio.action.PLAY").putExtra("url", url));
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), toast, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        Log.d(TAG, "running onStop...");
+//        stopService(new Intent(this, PlayerService.class));
+
     }
 }
