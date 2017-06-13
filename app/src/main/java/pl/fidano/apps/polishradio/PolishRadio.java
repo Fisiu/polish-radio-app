@@ -1,13 +1,7 @@
 package pl.fidano.apps.polishradio;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.os.PowerManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -43,8 +37,9 @@ public class PolishRadio extends AppCompatActivity
     private final String TAG = "PolishRadioActivity";
 
     private final String API_URL = "http://testradio.fidano.pl/api/v1/radios";
+    String toast = "";
     private ListView list;
-    private RadiosAdapter adapter ;
+    private RadiosAdapter adapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ArrayList<Radio> feed = new ArrayList<>();
 
@@ -175,13 +170,15 @@ public class PolishRadio extends AppCompatActivity
         adapter.notifyDataSetChanged();
     }
 
-    String toast = "";
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         final Radio radio = (Radio) parent.getItemAtPosition(position);
-        final String url = radio.getStreamUrl();
 
-        startService(new Intent(this, PlayerService.class).setAction("pl.fidano.apps.polishradio.action.PLAY").putExtra("url", url));
+        Intent intent = new Intent(this, PlayerService.class);
+        intent.setAction("pl.fidano.apps.polishradio.action.PLAY");
+        intent.putExtra("radio", radio);
+
+        startService(intent);
 
         runOnUiThread(new Runnable() {
             @Override

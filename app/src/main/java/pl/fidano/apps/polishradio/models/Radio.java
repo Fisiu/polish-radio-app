@@ -1,6 +1,8 @@
 package pl.fidano.apps.polishradio.models;
 
-public class Radio {
+import java.io.Serializable;
+
+public class Radio implements Serializable {
     private String mLogoUrl;
     private String mName;
     private String mUrl;
