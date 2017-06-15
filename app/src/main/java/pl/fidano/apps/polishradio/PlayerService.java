@@ -28,6 +28,7 @@ public class PlayerService extends Service implements MediaPlayer.OnPreparedList
     private WifiManager.WifiLock mWifiLock;
 
     private MediaPlayer mPlayer;
+    private Radio mRadio;
 
     @Nullable
     @Override
@@ -56,7 +57,8 @@ public class PlayerService extends Service implements MediaPlayer.OnPreparedList
 
         Log.d(TAG, "running onStartCommand...");
 
-        Radio radio = (Radio) intent.getSerializableExtra("radio");
+        stopForeground(true);
+        mRadio = (Radio) intent.getSerializableExtra("radio");
 
         if (intent.getAction().equals(ACTION_PLAY)) {
 
@@ -65,7 +67,7 @@ public class PlayerService extends Service implements MediaPlayer.OnPreparedList
 
             try {
                 mPlayer.reset(); // when switching between stations, first reset player
-                mPlayer.setDataSource(radio.getStreamUrl());
+                mPlayer.setDataSource(mRadio.getStreamUrl());
             } catch (IOException e) {
                 Log.e(TAG, "Exception when setting stream data source");
 
@@ -73,7 +75,6 @@ public class PlayerService extends Service implements MediaPlayer.OnPreparedList
             }
 
             mPlayer.prepareAsync(); // prepare async to not block main thread
-            showNotification(radio);
         }
         return START_STICKY;
     }
@@ -83,6 +84,7 @@ public class PlayerService extends Service implements MediaPlayer.OnPreparedList
         Log.d(TAG, "running onPrepared...");
 
         mPlayer.start();
+        showNotification(mRadio);
     }
 
     @Override

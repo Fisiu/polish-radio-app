@@ -37,7 +37,7 @@ public class PolishRadio extends AppCompatActivity
     private final String TAG = "PolishRadioActivity";
 
     private final String API_URL = "http://testradio.fidano.pl/api/v1/radios";
-    String toast = "";
+
     private ListView list;
     private RadiosAdapter adapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -179,13 +179,6 @@ public class PolishRadio extends AppCompatActivity
         intent.putExtra("radio", radio);
 
         startService(intent);
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), toast, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override
