@@ -46,25 +46,28 @@ public class PolishRadio extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "Activity onStart()");
+
         setContentView(R.layout.activity_polish_radio);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        list = (ListView) findViewById(android.R.id.list);
-        list.setOnItemClickListener(this);
-        feed.add(new Radio("Logo url", "Name", "Url", "Stream url"));
-        adapter = new RadiosAdapter(this, feed);
-        list.setAdapter(adapter);
+//        list = (ListView) findViewById(android.R.id.list);
+//        list.setOnItemClickListener(this);
+//        feed.add(new Radio("Logo url", "Name", "Url", "Stream url"));
+//        adapter = new RadiosAdapter(this, feed);
+//        list.setAdapter(adapter);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_INDEFINITE)
-                        .setAction("Action", null).show();
-                stopService(new Intent(getApplicationContext(), PlayerService.class));
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_INDEFINITE)
+//                        .setAction("Action", null).show();
+//                stopService(new Intent(getApplicationContext(), PlayerService.class));
+//            }
+//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -75,8 +78,8 @@ public class PolishRadio extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
+//        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+//        mSwipeRefreshLayout.setOnRefreshListener(this);
 
         VolleySingleton.getInstance(this).addToRequestQueue(new JsonArrayRequest(API_URL, this, this));
     }
@@ -145,14 +148,14 @@ public class PolishRadio extends AppCompatActivity
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        mSwipeRefreshLayout.setRefreshing(false);
+        //mSwipeRefreshLayout.setRefreshing(false);
         Log.d("FETCH", error.getMessage());
         Toast.makeText(getBaseContext(), "Fetching data failed", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onResponse(JSONArray response) {
-        mSwipeRefreshLayout.setRefreshing(false);
+        //mSwipeRefreshLayout.setRefreshing(false);
         // response is a json array
         int size = response.length();
         Log.d("API RESPONSE", response.toString());
@@ -167,7 +170,7 @@ public class PolishRadio extends AppCompatActivity
                 e.printStackTrace();
             }
         }
-        adapter.notifyDataSetChanged();
+        // adapter.notifyDataSetChanged();
     }
 
     @Override
