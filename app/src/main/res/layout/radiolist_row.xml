@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_marginRight="5dip"
-        android:background="@drawable/ic_action_radio"
+        android:background="@drawable/ic_launcher"
         android:padding="3dip">
 
         <ImageView
