@@ -133,6 +133,10 @@ public class PlayerService extends Service implements MediaPlayer.OnPreparedList
         return true; // error was handled
     }
 
+    public boolean isPlaying() {
+        return mPlayer != null && mPlayer.isPlaying() ? true : false;
+    }
+
     private void showNotification(Radio radio) {
         Intent notificationIntent = new Intent(this, PolishRadio.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
