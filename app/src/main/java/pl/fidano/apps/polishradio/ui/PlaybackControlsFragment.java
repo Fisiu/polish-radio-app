@@ -1,6 +1,7 @@
 package pl.fidano.apps.polishradio.ui;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -11,23 +12,24 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import pl.fidano.apps.polishradio.PlayerService;
 import pl.fidano.apps.polishradio.R;
-
-/**
- * Created by fisiu on 20.07.17.
- */
 
 public class PlaybackControlsFragment extends Fragment {
 
     private static final String TAG = "PlaybackControlsFragmen";
+    private final View.OnClickListener mButtonListener = v -> {
+        // TODO: implement play stop feature
+        Log.d(TAG, "PLAY/PAUSE");
 
+        getActivity().stopService(new Intent(getActivity(), PlayerService.class));
+    };
     private ImageButton mPlayPause;
     private TextView mTitle;
     private TextView mSubtitle;
     private TextView mExtraInfo;
     private ImageView mAlbumArt;
     private String mArtUrl;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -42,22 +44,8 @@ public class PlaybackControlsFragment extends Fragment {
         mExtraInfo = (TextView) rootView.findViewById(R.id.extra_info);
         mAlbumArt = (ImageView) rootView.findViewById(R.id.album_art);
 
-        rootView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "rootView clicked!");
-            }
-        });
+        rootView.setOnClickListener(v -> Log.d(TAG, "rootView clicked!"));
 
         return rootView;
     }
-
-
-    private final View.OnClickListener mButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            // TODO: implement play stop feature
-            Log.d(TAG, "PLAY/PAUSE");
-        }
-    };
 }

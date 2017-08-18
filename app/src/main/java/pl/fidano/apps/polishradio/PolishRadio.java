@@ -1,6 +1,9 @@
 package pl.fidano.apps.polishradio;
 
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -22,6 +25,8 @@ public class PolishRadio extends AppCompatActivity
 
     private static final String TAG = "PolishRadioActivity";
     private static final String FRAGMENT_TAG = "ListContainer";
+
+    private BroadcastReceiver mReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +54,8 @@ public class PolishRadio extends AppCompatActivity
         RadioListFragment fragment = new RadioListFragment();
         transaction.replace(R.id.container, fragment, FRAGMENT_TAG);
         transaction.commit();
+
+        initReceiver();
     }
 
     @Override
@@ -115,11 +122,9 @@ public class PolishRadio extends AppCompatActivity
 
     @Override
     protected void onStop() {
-        super.onStop();
-
         Log.d(TAG, "running onStop...");
-//        stopService(new Intent(this, PlayerService.class));
 
+        super.onStop();
     }
 
     @Override
@@ -134,5 +139,25 @@ public class PolishRadio extends AppCompatActivity
 
         startService(intent);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "running onDestroy...");
+
+        finishReceiver();
+
+        super.onDestroy();
+    }
+
+    private void initReceiver() {
+        mReceiver = new MyReceiver();
+        IntentFilter filter = new IntentFilter("playing");
+
+        registerReceiver(mReceiver, filter);
+    }
+
+    private void finishReceiver() {
+        unregisterReceiver(mReceiver);
     }
 }

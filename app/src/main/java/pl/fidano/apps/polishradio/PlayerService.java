@@ -85,6 +85,12 @@ public class PlayerService extends Service implements MediaPlayer.OnPreparedList
 
         mPlayer.start();
         showNotification(mRadio);
+
+        // send broadcast
+        Log.d(TAG, "sending broadcast...");
+        Intent intent = new Intent("playing");
+        intent.putExtra("state", "playing");
+        sendBroadcast(intent);
     }
 
     @Override
