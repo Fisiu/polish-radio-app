@@ -13,8 +13,8 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.bumptech.glide.Glide;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -70,7 +70,7 @@ public class RadioListFragment extends Fragment implements Response.Listener<JSO
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            adapter = new RadioRecyclerViewAdapter(feed, mListener);
+            adapter = new RadioRecyclerViewAdapter(feed, Glide.with(this), mListener);
             recyclerView.setAdapter(adapter);
         }
         return view;

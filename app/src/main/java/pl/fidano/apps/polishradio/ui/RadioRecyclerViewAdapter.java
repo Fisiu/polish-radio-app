@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.model.GlideUrl;
+
 import java.util.List;
 
 import pl.fidano.apps.polishradio.R;
@@ -21,11 +24,13 @@ import pl.fidano.apps.polishradio.ui.RadioListFragment.OnListFragmentInteraction
 public class RadioRecyclerViewAdapter extends RecyclerView.Adapter<RadioRecyclerViewAdapter.ViewHolder> {
 
     private final List<Radio> mRadioList;
+    private final RequestManager mGlide;
     private final OnListFragmentInteractionListener mListener;
 
-    public RadioRecyclerViewAdapter(List<Radio> items, OnListFragmentInteractionListener listener) {
+    public RadioRecyclerViewAdapter(List<Radio> items, RequestManager glide, OnListFragmentInteractionListener listener) {
         mRadioList = items;
         mListener = listener;
+        mGlide = glide;
     }
 
     @Override
@@ -40,8 +45,8 @@ public class RadioRecyclerViewAdapter extends RecyclerView.Adapter<RadioRecycler
         holder.mItem = mRadioList.get(position);
 
 
-//        holder.mImageView.setImageIcon(mValues.get(position).id);
         holder.mContentView.setText(mRadioList.get(position).getName());
+        loadImage(mGlide, mRadioList.get(position).getLogoUrl(), holder.mImageView);
 
         holder.mView.setOnClickListener(v -> {
             if (null != mListener) {
@@ -55,6 +60,11 @@ public class RadioRecyclerViewAdapter extends RecyclerView.Adapter<RadioRecycler
     @Override
     public int getItemCount() {
         return mRadioList.size();
+    }
+
+    private void loadImage(RequestManager glide, String imageUrl, ImageView view) {
+        GlideUrl url = new GlideUrl(imageUrl);
+        glide.load(url).into(view);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
