@@ -26,10 +26,7 @@ public class PlaybackControlsFragment extends Fragment {
     };
     private ImageButton mPlayPause;
     private TextView mTitle;
-    private TextView mSubtitle;
-    private TextView mExtraInfo;
-    private ImageView mAlbumArt;
-    private String mArtUrl;
+    private ImageView mLogo;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -40,9 +37,7 @@ public class PlaybackControlsFragment extends Fragment {
         mPlayPause.setOnClickListener(mButtonListener);
 
         mTitle = (TextView) rootView.findViewById(R.id.title);
-        mSubtitle = (TextView) rootView.findViewById(R.id.artist);
-        mExtraInfo = (TextView) rootView.findViewById(R.id.extra_info);
-        mAlbumArt = (ImageView) rootView.findViewById(R.id.album_art);
+        mLogo = (ImageView) rootView.findViewById(R.id.logo);
 
         rootView.setOnClickListener(v -> Log.d(TAG, "rootView clicked!"));
 
