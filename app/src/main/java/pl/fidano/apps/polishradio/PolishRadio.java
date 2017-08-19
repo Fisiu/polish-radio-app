@@ -152,8 +152,9 @@ public class PolishRadio extends AppCompatActivity
 
     private void initReceiver() {
         mReceiver = new MyReceiver();
-        IntentFilter filter = new IntentFilter("playing");
-
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
+        filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
         registerReceiver(mReceiver, filter);
     }
 
